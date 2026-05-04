@@ -1,0 +1,10 @@
+rules:
+  idiomatic:
+    directory-package-mismatch:
+      # Package names (terraform.policies.rXX) are intentional.
+      # Regal's fix would require deeply nested folders (r01/r01.rego)
+      # which is not appropriate for Conftest-style evaluation.
+      level: ignore
+    no-defined-entrypoint:
+      # Policies are evaluated via Conftest — no OPA entrypoint annotation needed.
+      level: ignore
