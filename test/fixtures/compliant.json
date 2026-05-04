@@ -1,0 +1,142 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.11.0",
+  "resource_changes": [
+    {
+      "address": "azurerm_linux_virtual_machine.main",
+      "type": "azurerm_linux_virtual_machine",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "vm-compliant",
+          "location": "swedencentral",
+          "size": "Standard_B1s",
+          "tags": {
+            "environment": "dev",
+            "owner": "team-platform",
+            "cost-center": "cc-001"
+          },
+          "os_disk": [
+            {
+              "disk_encryption_set_id": "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Compute/diskEncryptionSets/myDES",
+              "encryption_settings": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.main",
+      "type": "azurerm_storage_account",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "stcompliantdev001",
+          "location": "swedencentral",
+          "account_tier": "Standard",
+          "allow_nested_items_to_be_public": false,
+          "https_traffic_only_enabled": true,
+          "tags": {
+            "environment": "dev",
+            "owner": "team-platform",
+            "cost-center": "cc-001"
+          }
+        }
+      }
+    },
+    {
+      "address": "azurerm_role_assignment.main",
+      "type": "azurerm_role_assignment",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "role_definition_name": "Reader",
+          "tags": {
+            "environment": "dev",
+            "owner": "team-platform",
+            "cost-center": "cc-001"
+          }
+        }
+      }
+    },
+    {
+      "address": "azurerm_network_security_rule.ssh",
+      "type": "azurerm_network_security_rule",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "allow-ssh-restricted",
+          "location": "swedencentral",
+          "direction": "Inbound",
+          "access": "Allow",
+          "destination_port_range": "22",
+          "source_address_prefix": "10.0.0.0/24",
+          "tags": {
+            "environment": "dev",
+            "owner": "team-platform",
+            "cost-center": "cc-001"
+          }
+        }
+      }
+    },
+    {
+      "address": "azurerm_managed_disk.main",
+      "type": "azurerm_managed_disk",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "disk-compliant",
+          "location": "swedencentral",
+          "disk_encryption_set_id": "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Compute/diskEncryptionSets/myDES",
+          "encryption_settings": null,
+          "tags": {
+            "environment": "dev",
+            "owner": "team-platform",
+            "cost-center": "cc-001"
+          }
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_firewall_rule.main",
+      "type": "azurerm_mssql_firewall_rule",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "sql-fw-office",
+          "start_ip_address": "10.0.0.1",
+          "end_ip_address": "10.0.0.10",
+          "tags": {
+            "environment": "dev",
+            "owner": "team-platform",
+            "cost-center": "cc-001"
+          }
+        }
+      }
+    },
+    {
+      "address": "azurerm_postgresql_firewall_rule.main",
+      "type": "azurerm_postgresql_firewall_rule",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "postgres-fw-office",
+          "start_ip_address": "10.0.0.1",
+          "end_ip_address": "10.0.0.10",
+          "tags": {
+            "environment": "dev",
+            "owner": "team-platform",
+            "cost-center": "cc-001"
+          }
+        }
+      }
+    }
+  ]
+}

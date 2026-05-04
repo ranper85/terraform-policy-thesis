@@ -1,0 +1,129 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.11.0",
+  "resource_changes": [
+    {
+      "address": "azurerm_linux_virtual_machine.main",
+      "type": "azurerm_linux_virtual_machine",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "vm-non-compliant",
+          "location": "eastus",
+          "size": "Standard_D4s_v3",
+          "tags": {},
+          "os_disk": [
+            {
+              "disk_encryption_set_id": null,
+              "encryption_settings": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.main",
+      "type": "azurerm_storage_account",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "stnoncompdev001",
+          "location": "eastus",
+          "account_tier": "Premium",
+          "allow_nested_items_to_be_public": true,
+          "https_traffic_only_enabled": false,
+          "tags": {}
+        }
+      }
+    },
+    {
+      "address": "azurerm_role_assignment.main",
+      "type": "azurerm_role_assignment",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "role_definition_name": "Owner",
+          "tags": {}
+        }
+      }
+    },
+    {
+      "address": "azurerm_network_security_rule.ssh",
+      "type": "azurerm_network_security_rule",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "allow-ssh-internet",
+          "location": "eastus",
+          "direction": "Inbound",
+          "access": "Allow",
+          "destination_port_range": "22",
+          "source_address_prefix": "0.0.0.0/0",
+          "tags": {}
+        }
+      }
+    },
+    {
+      "address": "azurerm_network_security_rule.rdp",
+      "type": "azurerm_network_security_rule",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "allow-rdp-internet",
+          "location": "eastus",
+          "direction": "Inbound",
+          "access": "Allow",
+          "destination_port_range": "3389",
+          "source_address_prefix": "*",
+          "tags": {}
+        }
+      }
+    },
+    {
+      "address": "azurerm_managed_disk.main",
+      "type": "azurerm_managed_disk",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "disk-non-compliant",
+          "location": "eastus",
+          "disk_encryption_set_id": null,
+          "encryption_settings": null,
+          "tags": {}
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_firewall_rule.main",
+      "type": "azurerm_mssql_firewall_rule",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "sql-fw-all",
+          "start_ip_address": "0.0.0.0",
+          "end_ip_address": "255.255.255.255"
+        }
+      }
+    },
+    {
+      "address": "azurerm_postgresql_firewall_rule.main",
+      "type": "azurerm_postgresql_firewall_rule",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "postgres-fw-all",
+          "start_ip_address": "0.0.0.0",
+          "end_ip_address": "255.255.255.255"
+        }
+      }
+    }
+  ]
+}
