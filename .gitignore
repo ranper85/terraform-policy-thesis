@@ -9,3 +9,7 @@
 
 # terraform.tfvars contains real subscription IDs and principal IDs
 terraform.tfvars
+
+# Terraform plan files — contain resource details and potentially sensitive data
+*.binary
+tfplan.json

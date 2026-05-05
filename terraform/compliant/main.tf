@@ -49,7 +49,7 @@ resource "azurerm_network_interface" "main" {
 # --- Key Vault + Key (R-08: encryption at rest) ---
 
 resource "azurerm_key_vault" "main" {
-  name                       = "kv-thesis-compliant"  # must be globally unique in Azure, max 24 chars
+  name                       = "kv-thesis-compliant" # must be globally unique in Azure, max 24 chars
   resource_group_name        = azurerm_resource_group.main.name
   location                   = azurerm_resource_group.main.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -109,7 +109,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   name                            = "vm-compliant"
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location # R-06: approved EU region
-  size                            = "Standard_B1s"                        # R-01: allowed size
+  size                            = "Standard_B2als_v2"                  # R-01: allowed size
   admin_username                  = var.admin_username
   disable_password_authentication = true # SSH only — no password login allowed
   network_interface_ids           = [azurerm_network_interface.main.id]
@@ -140,10 +140,10 @@ resource "azurerm_storage_account" "main" {
   name                            = "stcompliantdev001"
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location # R-06: approved EU region
-  account_tier                    = "Standard"                            # R-02: Standard only
+  account_tier                    = "Standard"                           # R-02: Standard only
   account_replication_type        = "LRS"
-  allow_nested_items_to_be_public = false # R-03: no public blob access
-  https_traffic_only_enabled      = true  # R-03: HTTPS enforced
+  allow_nested_items_to_be_public = false      # R-03: no public blob access
+  https_traffic_only_enabled      = true       # R-03: HTTPS enforced
   tags                            = local.tags # R-07: all required tags
 }
 
@@ -151,7 +151,7 @@ resource "azurerm_storage_account" "main" {
 
 resource "azurerm_role_assignment" "main" {
   scope                = azurerm_resource_group.main.id
-  role_definition_name = "Reader"         # R-04: least-privilege role
+  role_definition_name = "Reader" # R-04: least-privilege role
   principal_id         = var.principal_id
 }
 
@@ -188,7 +188,7 @@ resource "azurerm_managed_disk" "main" {
   create_option          = "Empty"
   disk_size_gb           = 64
   disk_encryption_set_id = azurerm_disk_encryption_set.main.id # R-08: encryption at rest
-  tags                   = local.tags # R-07: all required tags
+  tags                   = local.tags                          # R-07: all required tags
 }
 
 # --- SQL Server + Firewall (R-09) ---
@@ -206,6 +206,6 @@ resource "azurerm_mssql_server" "main" {
 resource "azurerm_mssql_firewall_rule" "main" {
   name             = "sql-fw-office"
   server_id        = azurerm_mssql_server.main.id
-  start_ip_address = "10.0.0.1"  # R-09: specific IP range only
+  start_ip_address = "10.0.0.1" # R-09: specific IP range only
   end_ip_address   = "10.0.0.10"
 }

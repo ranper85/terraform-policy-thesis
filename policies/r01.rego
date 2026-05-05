@@ -11,6 +11,10 @@ allowed_vm_sizes := [
 	"Standard_B2s",
 	"Standard_B1ms",
 	"Standard_B2ms",
+	"Standard_B2als_v2",
+	"Standard_B2as_v2",
+	"Standard_B2ls_v2",
+	"Standard_B2s_v2",
 ]
 
 deny contains msg if {
