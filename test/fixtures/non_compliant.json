@@ -113,15 +113,15 @@
       }
     },
     {
-      "address": "azurerm_postgresql_firewall_rule.main",
-      "type": "azurerm_postgresql_firewall_rule",
+      "address": "azurerm_mssql_server.main",
+      "type": "azurerm_mssql_server",
       "change": {
         "actions": ["create"],
         "before": null,
         "after": {
-          "name": "postgres-fw-all",
-          "start_ip_address": "0.0.0.0",
-          "end_ip_address": "255.255.255.255"
+          "name": "sql-thesis-noncmpl-dev",
+          "location": "eastus",
+          "tags": {}
         }
       }
     }

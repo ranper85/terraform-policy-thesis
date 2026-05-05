@@ -1,19 +1,6 @@
 # Non-compliant Terraform configuration — violates all 9 policy rules
 # Used to verify that policy violations are correctly detected.
 
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
 resource "azurerm_resource_group" "main" {
   name     = "rg-non-compliant"
   location = "eastus" # R-06 VIOLATION: non-EU region
@@ -75,11 +62,11 @@ resource "azurerm_linux_virtual_machine" "main" {
 }
 
 resource "azurerm_storage_account" "main" {
-  name                      = "stnoncompdev001"
-  resource_group_name       = azurerm_resource_group.main.name
-  location                  = "eastus"  # R-06 VIOLATION: non-EU region
-  account_tier              = "Premium" # R-02 VIOLATION: Premium tier not allowed
-  account_replication_type  = "LRS"
+  name                            = "stnoncompdev001"
+  resource_group_name             = azurerm_resource_group.main.name
+  location                        = "eastus"  # R-06 VIOLATION: non-EU region
+  account_tier                    = "Premium" # R-02 VIOLATION: Premium tier not allowed
+  account_replication_type        = "LRS"
   allow_nested_items_to_be_public = true  # R-03 VIOLATION: public blob access enabled
   https_traffic_only_enabled      = false # R-03 VIOLATION: HTTP traffic allowed
   # R-07 VIOLATION: missing required tags
@@ -136,17 +123,19 @@ resource "azurerm_managed_disk" "main" {
   # R-07 VIOLATION: missing required tags
 }
 
-resource "azurerm_mssql_firewall_rule" "main" {
-  name             = "sql-fw-all"
-  server_id        = "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Sql/servers/mysqlserver"
-  start_ip_address = "0.0.0.0"       # R-09 VIOLATION: open to all IP addresses
-  end_ip_address   = "255.255.255.255"
+resource "azurerm_mssql_server" "main" {
+  name                         = "sql-thesis-noncmpl-dev" # must be globally unique in Azure
+  resource_group_name          = azurerm_resource_group.main.name
+  location                     = "eastus" # R-06 VIOLATION: non-EU region
+  version                      = "12.0"
+  administrator_login          = "sqladmin"
+  administrator_login_password = var.sql_admin_password
+  # R-07 VIOLATION: missing required tags
 }
 
-resource "azurerm_postgresql_firewall_rule" "main" {
-  name                = "postgres-fw-all"
-  resource_group_name = azurerm_resource_group.main.name
-  server_name         = "mypostgresserver"
-  start_ip_address    = "0.0.0.0"       # R-09 VIOLATION: open to all IP addresses
-  end_ip_address      = "255.255.255.255"
+resource "azurerm_mssql_firewall_rule" "main" {
+  name             = "sql-fw-all"
+  server_id        = azurerm_mssql_server.main.id
+  start_ip_address = "0.0.0.0"       # R-09 VIOLATION: open to all IP addresses
+  end_ip_address   = "255.255.255.255"
 }

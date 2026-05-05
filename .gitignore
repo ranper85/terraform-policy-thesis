@@ -1,2 +1,11 @@
 # macOS
 .DS_Store
+
+# Terraform — state and credentials must never be committed
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# terraform.tfvars contains real subscription IDs and principal IDs
+terraform.tfvars
