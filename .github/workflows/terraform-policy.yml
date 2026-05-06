@@ -1,0 +1,98 @@
+name: Terraform Policy Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write  # required for OIDC
+  contents: read
+
+jobs:
+  policy-check-compliant:
+    name: Compliant Config — Policy Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Setup Conftest
+        uses: open-policy-agent/setup-opa@v2
+
+      - name: Terraform Init (compliant)
+        working-directory: terraform/compliant
+        run: terraform init
+
+      - name: Terraform Plan (compliant)
+        working-directory: terraform/compliant
+        env:
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_principal_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_sql_admin_password: ${{ secrets.TF_VAR_sql_admin_password }}
+          TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+        run: terraform plan -out=tfplan.binary
+
+      - name: Convert Plan to JSON (compliant)
+        working-directory: terraform/compliant
+        run: terraform show -json tfplan.binary > tfplan.json
+
+      - name: Run Conftest (compliant — must pass)
+        working-directory: terraform/compliant
+        run: conftest test tfplan.json --policy ../../policies --all-namespaces
+
+  policy-check-non-compliant:
+    name: Non-Compliant Config — Policy Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Setup Conftest
+        uses: open-policy-agent/setup-opa@v2
+
+      - name: Terraform Init (non-compliant)
+        working-directory: terraform/non_compliant
+        run: terraform init
+
+      - name: Terraform Plan (non-compliant)
+        working-directory: terraform/non_compliant
+        env:
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_sql_admin_password: ${{ secrets.TF_VAR_sql_admin_password }}
+          TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+        run: terraform plan -out=tfplan.binary
+
+      - name: Convert Plan to JSON (non-compliant)
+        working-directory: terraform/non_compliant
+        run: terraform show -json tfplan.binary > tfplan.json
+
+      - name: Run Conftest (non-compliant — expected to fail)
+        working-directory: terraform/non_compliant
+        run: |
+          conftest test tfplan.json --policy ../../policies --all-namespaces && \
+          echo "ERROR: non-compliant config passed — policies should have caught violations" && exit 1 || \
+          echo "PASS: violations correctly detected by policy"
