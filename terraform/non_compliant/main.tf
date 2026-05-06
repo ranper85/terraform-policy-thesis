@@ -44,7 +44,7 @@ resource "azurerm_linux_virtual_machine" "main" {
 
   admin_ssh_key {
     username   = "adminuser"
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC demo-key"
+    public_key = var.ssh_public_key
   }
 
   os_disk {
@@ -136,6 +136,6 @@ resource "azurerm_mssql_server" "main" {
 resource "azurerm_mssql_firewall_rule" "main" {
   name             = "sql-fw-all"
   server_id        = azurerm_mssql_server.main.id
-  start_ip_address = "0.0.0.0"       # R-09 VIOLATION: open to all IP addresses
+  start_ip_address = "0.0.0.0" # R-09 VIOLATION: open to all IP addresses
   end_ip_address   = "255.255.255.255"
 }
