@@ -2,7 +2,7 @@ package terraform.policies.r03
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Storage Accounts (Level 1 controls)
+# CIS Azure Benchmark v6.0.0 - Storage Accounts (Level 1 controls)
 # Control 1: Public blob access exposes data to the internet without authentication
 # Control 2: Allowing HTTP means data in transit is unencrypted
 

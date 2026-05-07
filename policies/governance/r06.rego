@@ -2,7 +2,7 @@ package terraform.policies.r06
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Architecture / Data Residency
+# CIS Azure Benchmark v6.0.0 - Architecture / Data Residency
 # Rationale: GDPR requires personal data stays within approved geographic
 # boundaries. Sweden-based project — only EU regions permitted.
 

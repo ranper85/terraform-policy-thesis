@@ -2,7 +2,7 @@ package terraform.policies.r02
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Storage Accounts
+# CIS Azure Benchmark v6.0.0 - Storage Accounts
 # Rationale: Premium storage costs significantly more than Standard
 # and is not appropriate for development environments.
 

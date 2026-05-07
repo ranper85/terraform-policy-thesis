@@ -2,7 +2,7 @@ package terraform.policies.r08
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Virtual Machines
+# CIS Azure Benchmark v6.0.0 - Virtual Machines
 # Rationale: Encryption at rest is the most consistently neglected
 # security category in real-world Terraform projects (Verdet et al., 2025).
 # Unencrypted managed disks expose data if the underlying storage is compromised.

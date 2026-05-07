@@ -2,7 +2,7 @@ package terraform.policies.r09
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Database Services
+# CIS Azure Benchmark v6.0.0 - Database Services
 # Rationale: Publicly accessible databases are exposed to the internet,
 # creating a critical attack surface. Azure SQL should only be accessible
 # from within approved network paths.

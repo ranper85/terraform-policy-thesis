@@ -2,7 +2,7 @@ package terraform.policies.r01
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Virtual Machines
+# CIS Azure Benchmark v6.0.0 - Virtual Machines
 # Rationale: Oversized VMs in development environments are the most
 # direct source of unnecessary cloud spend.
 

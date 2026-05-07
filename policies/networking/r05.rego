@@ -2,7 +2,7 @@ package terraform.policies.r05
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Networking
+# CIS Azure Benchmark v6.0.0 - Networking
 # Rationale: SSH (22) and RDP (3389) open to 0.0.0.0/0 allow anyone
 # on the internet to attempt to connect to your VMs.
 

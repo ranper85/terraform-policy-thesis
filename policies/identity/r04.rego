@@ -2,7 +2,7 @@ package terraform.policies.r04
 
 import rego.v1
 
-# CIS Azure Benchmark v3.0.0 - Identity and Access Management
+# CIS Azure Benchmark v6.0.0 - Identity and Access Management
 # Rationale: Owner and Contributor roles grant full control over Azure
 # resources, violating the principle of least privilege.
 
