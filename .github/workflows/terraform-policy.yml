@@ -34,8 +34,9 @@ jobs:
 
       - name: Install Conftest
         run: |
-          curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.50.0/conftest_0.50.0_Linux_x86_64.tar.gz | tar xz
+          curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.64.0/conftest_0.64.0_Linux_x86_64.tar.gz | tar xz
           sudo mv conftest /usr/local/bin/
+          conftest --version
 
       - name: Terraform Init (compliant)
         working-directory: terraform/compliant
@@ -78,8 +79,9 @@ jobs:
 
       - name: Install Conftest
         run: |
-          curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.50.0/conftest_0.50.0_Linux_x86_64.tar.gz | tar xz
+          curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.64.0/conftest_0.64.0_Linux_x86_64.tar.gz | tar xz
           sudo mv conftest /usr/local/bin/
+          conftest --version
 
       - name: Terraform Init (non-compliant)
         working-directory: terraform/non_compliant
@@ -103,3 +105,36 @@ jobs:
           conftest test tfplan.json --policy ../../policies --all-namespaces && \
           echo "ERROR: non-compliant config passed — policies should have caught violations" && exit 1 || \
           echo "PASS: violations correctly detected by policy"
+
+  terraform-apply:
+    name: Terraform Apply — Compliant Config
+    needs: policy-check-compliant
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v3.0.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4.0.0
+
+      - name: Terraform Init
+        working-directory: terraform/compliant
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: terraform/compliant
+        env:
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_principal_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_sql_admin_password: ${{ secrets.TF_VAR_sql_admin_password }}
+          TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+        run: terraform apply -auto-approve

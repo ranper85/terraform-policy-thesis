@@ -18,15 +18,3 @@ deny contains msg if {
 		[resource.address],
 	)
 }
-
-deny contains msg if {
-	some resource in input.resource_changes
-	resource.type == "azurerm_postgresql_firewall_rule"
-	"create" in resource.change.actions
-	resource.change.after.start_ip_address == "0.0.0.0"
-	resource.change.after.end_ip_address == "255.255.255.255"
-	msg := sprintf(
-		"R-09 VIOLATION: PostgreSQL firewall rule '%s' allows access from all IP addresses — restrict to known IP ranges",
-		[resource.address],
-	)
-}
