@@ -4,7 +4,7 @@ import rego.v1
 
 # CIS Azure Benchmark v6.0.0 - Logging and Monitoring
 # Rationale: Mandatory tags enable cost tracking and observability.
-# Directly addresses the logging/monitoring gap identified by Verdet et al. (2025).
+# Directly addresses the logging/monitoring gap identified by Verdet et al. (2023).
 
 required_tags := ["environment", "owner", "cost-center"]
 

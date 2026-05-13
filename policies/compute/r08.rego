@@ -4,7 +4,7 @@ import rego.v1
 
 # CIS Azure Benchmark v6.0.0 - Virtual Machines
 # Rationale: Encryption at rest is the most consistently neglected
-# security category in real-world Terraform projects (Verdet et al., 2025).
+# security category in real-world Terraform projects (Verdet et al., 2023).
 # Unencrypted managed disks expose data if the underlying storage is compromised.
 
 deny contains msg if {
