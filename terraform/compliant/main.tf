@@ -49,7 +49,7 @@ resource "azurerm_network_interface" "main" {
 # --- Key Vault + Key (R-08: encryption at rest) ---
 
 resource "azurerm_key_vault" "main" {
-  name                       = "kv-thesis-compliant" # must be globally unique in Azure, max 24 chars
+  name                       = "kv-thesis-comp-dev" # must be globally unique in Azure, max 24 chars
   resource_group_name        = azurerm_resource_group.main.name
   location                   = azurerm_resource_group.main.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -150,9 +150,10 @@ resource "azurerm_storage_account" "main" {
 # --- IAM ---
 
 resource "azurerm_role_assignment" "main" {
-  scope                = azurerm_resource_group.main.id
-  role_definition_name = "Reader" # R-04: least-privilege role
-  principal_id         = var.principal_id
+  scope                            = azurerm_resource_group.main.id
+  role_definition_name             = "Reader" # R-04: least-privilege role
+  principal_id                     = var.principal_id
+  principal_type                   = "ServicePrincipal"
 }
 
 # --- Network Security ---

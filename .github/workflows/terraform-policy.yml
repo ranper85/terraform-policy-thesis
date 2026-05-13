@@ -126,6 +126,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v4.0.0
 
+      - name: Cleanup leftover Azure resources
+        run: |
+          az group delete --name rg-compliant-dev --yes || true
+
       - name: Terraform Init
         working-directory: terraform/compliant
         run: terraform init
