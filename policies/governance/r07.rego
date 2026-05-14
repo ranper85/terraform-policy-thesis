@@ -16,6 +16,7 @@ tag_exempt_types := {
 	"azurerm_network_security_rule",
 	"azurerm_role_assignment",
 	"azurerm_subnet",
+	"random_string",
 }
 
 deny contains msg if {
