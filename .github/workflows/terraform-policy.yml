@@ -126,10 +126,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v4.0.0
 
-      - name: Cleanup leftover Azure resources
-        run: |
-          az group delete --name rg-compliant-dev --yes || true
-
       - name: Terraform Init
         working-directory: terraform/compliant
         run: terraform init
@@ -142,3 +138,37 @@ jobs:
           TF_VAR_sql_admin_password: ${{ secrets.TF_VAR_sql_admin_password }}
           TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
         run: terraform apply -auto-approve
+
+  terraform-destroy:
+    name: Terraform Destroy — Compliant Config
+    needs: terraform-apply
+    runs-on: ubuntu-latest
+    environment: destroy-approval
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v3.0.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4.0.0
+
+      - name: Terraform Init
+        working-directory: terraform/compliant
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: terraform/compliant
+        env:
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_principal_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_sql_admin_password: ${{ secrets.TF_VAR_sql_admin_password }}
+          TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+        run: terraform destroy -auto-approve

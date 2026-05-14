@@ -48,8 +48,14 @@ resource "azurerm_network_interface" "main" {
 
 # --- Key Vault + Key (R-08: encryption at rest) ---
 
+resource "random_string" "kv_suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 resource "azurerm_key_vault" "main" {
-  name                       = "kv-thesis-comp-dev" # must be globally unique in Azure, max 24 chars
+  name                       = "kv-comp-${random_string.kv_suffix.result}" # unique per deployment
   resource_group_name        = azurerm_resource_group.main.name
   location                   = azurerm_resource_group.main.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
