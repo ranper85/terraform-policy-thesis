@@ -1,8 +1,8 @@
-# Terraform Policy-as-Code Governance for Microsoft Azure
+# Policy-as-Code Governance for Microsoft Azure
 
 This repository contains the implementation for the thesis:
 
-**"Design and Evaluation of a Policy-as-Code Governance Layer for Microsoft Azure Infrastructure using OPA and Conftest in a GitHub Actions CI/CD Pipeline"**
+**"Policy-as-Code Governance for Microsoft Azure: Design and Evaluation of a Terraform CI/CD Pipeline using OPA and Conftest"**
 
 ## Overview
 
